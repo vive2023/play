@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: ensure nimbus service is stopped
+    service:
+     name: nimbus
+     state: stopped

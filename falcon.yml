@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: no
+  gather_facts: yes
+  tasks:
+  - name: "service status"
+    service_facts:
+  - name: "see the falcon-sensor service status"
+    debug:
+      msg: "{{ansible_facts.services['falcon-sensor.service'].state}}"

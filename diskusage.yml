@@ -1,0 +1,11 @@
+---
+  - name: Check the remote host uptime
+    hosts: do
+    tasks:
+      - name: Execute the Uptime command over Command module
+        register: diskusage
+        shell: |
+              df -hPT | grep -i capturereplay
+              df -hPT | grep -i sapmnt
+      - debug:
+          var: diskusage.stdout_lines

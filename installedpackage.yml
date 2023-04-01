@@ -1,0 +1,22 @@
+---
+- name: installed package
+  hosts: do
+  become: true
+  vars:
+    ansible_user: "1182162"
+    ansible_password: "Almpv0231d"
+    host_key_checking: false
+
+  tasks:
+
+    - debug:
+        msg: "distribution {{ ansible_facts.distribution }}"
+
+
+    - name: Additional Component Installs - RHEL Install Dependencies General
+      yum:
+        name: qpid*
+        list: available
+      when:
+        - ansible_facts.distribution == "Redhat Enterprise linux"
+        - ansible_distribution_version == "7.9"

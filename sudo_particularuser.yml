@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: Append new line using 'lineinfile' module and 'line'
+    lineinfile:
+      path: /etc/sudoers
+      line: 'prdadm  ALL=NOPASSWD: ALL , !/usr/bin/yum, !/usr/sbin/reboot, !/usr/bin/passwd, !/usr/bin/rpm,!/usr/sbin/shutdown, !/usr/sbin/init'
+      state: present
+      backup: yes      
+      create: yes
+      

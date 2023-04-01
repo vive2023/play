@@ -1,0 +1,44 @@
+---
+- name: mokutil package installation to check secureboot status
+  hosts: all
+  tasks:
+    - name: install mokutil RPM in RHEL 6&7
+      yum:
+        name: mokutil
+        state: present
+      become: yes
+      when: >
+        ((ansible_facts['distribution'] == "RedHat"
+        and ansible_facts['distribution_major_version'] == "6")
+        or
+        (ansible_facts['distribution'] == "RedHat"
+        and ansible_facts['distribution_major_version'] == "7"))
+
+    - name: install mokutil RPM in RHEL8
+      dnf:
+        name: mokutil
+        state: present
+      become: yes
+      when: >
+        (ansible_facts['distribution'] == "RedHat"
+        and ansible_facts['distribution_major_version'] == "8")
+
+    - name: install mokutil RPM in RHEL8
+      yum:
+        name: mokutil
+        state: present
+      become: yes
+      when: >
+        (ansible_facts['distribution'] == "Oracle Linux"
+        and ansible_facts['distribution_major_version'] == "8")
+ 
+    - name: install mokutil RPM in SUSE
+      shell:
+        cmd: zypper --non-interactive install mokutil 
+      register: mokutilinfo
+      become: yes
+    - debug:
+        msg: "{{ mokutilinfo.stdout }}"
+      when: >
+        (ansible_facts['distribution'] == "SLES"
+        and ansible_facts['distribution_major_version'] == "15")

@@ -1,0 +1,13 @@
+---
+ - hosts: all
+   gather_facts: yes
+
+ - tasks:
+          #  - include_vars: users.yml
+
+  - name: "Check that user exists"
+    #   shell: "grep {{item.username}} /etc/passwd"
+    shell: "grep {{splunk}} /etc/passwd"
+    ignore_errors: yes
+    register: userexist
+    #with_items: "{{users}}"

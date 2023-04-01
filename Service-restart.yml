@@ -1,0 +1,9 @@
+---
+ - hosts: all
+   gather_facts: yes
+
+   tasks:
+    - name: restart goferd
+      service:
+         name: goferd
+         state: restarted

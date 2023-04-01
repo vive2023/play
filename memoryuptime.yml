@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: run memory
+    shell: free -h
+    register: memory
+  - name: show uptime
+    debug: var=memory

@@ -1,0 +1,13 @@
+---
+- hosts: all
+
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Display inventory_hostname
+      debug:
+        msg: "inventory_namename is {{inventory_hostname}}"
+
+    - name: Display ansible_hostname
+      debug:
+        msg: "ansible-hostname is {{ansible_hostname}}"

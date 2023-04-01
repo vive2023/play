@@ -1,0 +1,5 @@
+---
+- name: Splunk Installations
+  hosts: all
+  roles:
+    - splunk

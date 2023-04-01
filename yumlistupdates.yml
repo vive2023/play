@@ -1,0 +1,11 @@
+---
+  - name: Check the remote host uptime and kernel update
+    hosts: do
+    tasks:
+      - name: Execute the Uptime andchecking kernel update
+        register: kernelupdate
+        shell: |
+               yum list updates | grep -i kernel
+               uptime 
+      - debug:
+          var: kernelupdate.stdout_lines

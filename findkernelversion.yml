@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars:
+   kernel_version: "{{ ansible_kernel }}"
+  tasks:
+   - name: 'kernel version from facts'
+     debug:
+      msg: "servername: '{{ansible_fqdn}}' kernelversion: '{{ansible_kernel}}'operating system:'{{ ansible_distribution }}' '{{ ansible_distribution_version}}'"
+   
+
+   

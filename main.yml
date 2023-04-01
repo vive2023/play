@@ -1,0 +1,7 @@
+---
+# defaults file for ansible-role-splunkuf
+
+#binary_src_linux: https://armautomationartifacts.blob.core.windows.net/splunkuf/splunkforwarder-8.2.2-87344edfcdb4-Linux-x86_64.tgz?sp=r&st=2021-04-21T11:57:19Z&se=2025-04-21T19:57:19Z&spr=https&sv=2020-02-10&sr=c&sig=ROWothsDhF%2BnICpf5Mcy4yyumFeoy5oqlQG%2BsHBixCc%3D
+binary_tmpdir_linux: /tmp/
+binary_filename_linux: splunkforwarder-8.2.2-87344edfcdb4-linux-2.6-x86_64.rpm
+splunk_installdir_linux: /opt/splunkforwarder

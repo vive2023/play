@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+  - name: Gather Version
+    shell: cat /etc/sudoers | grep -i prdadm* 
+    register: shell_result
+    tags:
+      - qpid
+
+  - debug:
+      var: shell_result.stdout_lines
+
+  - name: Write  Version
+    local_action: shell echo "{{ ansible_hostname }}, {{shell_result.stdout_lines}} " >> /home/1182162/test.txt

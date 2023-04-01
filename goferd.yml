@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+  - name: Gather Version
+    shell: yum list installed | grep -i qpid* 
+    register: shell_result
+    tags:
+      - qpid
+
+  - debug:
+      var: shell_result.stdout_lines
+
+  - name: Write  Version
+    local_action: shell echo "{{ ansible_hostname }}, {{shell_result.stdout_lines\n}} " >> /home/1182162/ansiple/falconversioncheck/test.txt

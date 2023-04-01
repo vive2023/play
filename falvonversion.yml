@@ -1,0 +1,12 @@
+- hosts: all
+  tasks:
+  - name: Gather Version
+    command: rpm -q --qf "%{VERSION}" falcon-sensor
+    register: shell_result
+    tags:
+      - Falcon version
+
+  - debug:
+      var: shell_result.stdout_lines
+  - name: Write  Version
+    local_action: shell echo "{{ ansible_hostname }}, {{shell_result.stdout_lines}} " >> /home/1182162/ansiple/falconversioncheck/test.txt

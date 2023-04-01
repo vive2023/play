@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: Append new line using 'lineinfile' module and 'line'
+    lineinfile:
+      path: /etc/resolv.conf
+      line: "{{ item }}"
+      state: present
+      backup: yes
+      create: yes
+    with_items:
+    -  'nameserver 10.212.96.129'
+    -  'nameserver 10.212.96.130'
+

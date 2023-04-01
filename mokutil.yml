@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+  - name: check mokutil package installed or not 
+    shell: yum list installed | grep -i mokutil* 
+    register: shell_result
+    tags:
+      - mokutil
+
+  - debug:
+      var: shell_result.stdout_lines
+
+  - name: Write  Version
+    local_action: shell echo "{{ ansible_hostname }}, {{shell_result.stdout_lines\n}} " >> /home/1182162/ansiple/secureboot/test.txt

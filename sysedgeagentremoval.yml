@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+  tasks:
+  - name: Remove SysEDGE agent
+    shell: "lsm -e CA_SystemEDGE_Core -s"

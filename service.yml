@@ -1,0 +1,13 @@
+---
+- name: service status
+  hosts: all
+  gather_facts: yes
+  become: no
+  tasks:
+   - name: collect facts about system services
+     service_facts:
+          #  register: services_state
+
+   - name: Debug
+     debug:
+       msg: "{{ansible_facts.services}}"

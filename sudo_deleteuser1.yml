@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: "Example1: check line using 'lineinfile' module and 'line'whether it is present or not"
+    tags: example1
+    lineinfile:
+      path: /etc/sudoers
+      regexp: 'prdadm ALL=(ALL) ALL, !/usr/bin/yum, !/usr/sbin/reboot, !/usr/bin/passwd, !/usr/bin/rpm, !/usr/sbin/shutdown, !/usr/sbin/init'
+      state: absent
+      backup: yes
+    register: example1out

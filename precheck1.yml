@@ -1,0 +1,54 @@
+---
+  - name: Check the remote host uptime
+    hosts: do
+    ignore_errors: yes
+    tasks:
+      - name: Execute the Uptime command over Command module
+        shell: |
+                 hostname;
+                 uptime;
+                 date;
+                 df -hPT | wc -l;
+                 df -hPT;
+                 dmidecode |grep -i prod;
+                 cat /etc/fstab;
+                 lsblk;
+                 blkid;
+                 subscription-manager list;
+                 cat /etc/sysconfig/network-scripts/ifcfg-eth0;
+                 ls -lrt /dev/asm*;
+                 ls -lrt /dev/sd*;
+                 cat /etc/resolv.conf;
+                 uname -r;
+                 uname -n;
+                 netstat -nr;
+                 cat /etc/hosts;
+                 pvs;
+                 vgs;
+                 lvs;
+                 lscpu;
+                 cat /proc/mounts;
+                 free -m;
+                 lsscsi;
+                 service vmware-tools status;
+                 rpm -qa | grep open-vm;
+                 cat /etc/udev/rules.d/91-asm.rules;
+                 cat /etc/udev/rules.d/91-asm.rules | wc -l;
+                 yum clean all;
+                 yum repolist;
+                 systemctl --no-pager status kdump;
+                 systemctl --no-pager status oswatcher;
+                 service kdump status;
+                 exit 0
+                 service oswatcher status;
+                 exit 0
+                 subscription-manager list;
+                 ps -ef |grep -i pmon;
+                 cat /etc/default/grub;
+                 cat /etc/audit/auditd.conf;
+                 crm status;
+        register: output
+      - debug:
+           var: output.stdout_lines
+      - name: Write  Version
+        local_action: copy content="{{ output.stdout_lines | to_nice_json }}" dest="/sys_bkp/precheck/{{ inventory_hostname }}_precheck.txt"

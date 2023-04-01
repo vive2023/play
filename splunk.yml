@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: no
+  gather_facts: yes
+  tasks:
+  - name: "service status"
+    service_facts:
+  - name: "see the splunk service status"
+    debug:
+      msg: "{{ansible_facts.services['SplunkForwarder.service'].state}}"

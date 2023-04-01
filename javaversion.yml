@@ -1,0 +1,13 @@
+---
+- name: to check java status 
+  hosts: all
+  gather_facts: yes
+  become: false 
+  tasks:
+  -  name: java status
+     shell:
+       cmd: java -version
+     register: javainfo
+  -  debug: 
+       msg: "{{ javainfo.stdout_lines }}"
+

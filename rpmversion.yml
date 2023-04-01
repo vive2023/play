@@ -1,0 +1,15 @@
+---
+ - hosts: all
+   become: true
+   tasks:
+    - name: Check Hostname
+      command: /usr/bin/hostname
+
+    - name: Check for package if is installed
+      yum:
+        list: *qpid*
+      register: package_name_version
+
+    - name: set package version
+      set_fact:
+        package_name_version: "{{ package_name_version.results|selectattr('yumstate','equalto','installed')|map(attribute='version')|list|first }}"

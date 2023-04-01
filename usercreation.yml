@@ -1,0 +1,26 @@
+---
+- hosts: all
+  remote_user: 1182162
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  connection: ssh
+  vars:
+    myuser: "basis"
+    mypassword: "Woolworths1t"
+  tasks:
+
+    # Creating the user basis
+    - name: Add the user 'basis' with a specific uid 
+      ansible.builtin.user:
+        name: basis
+        comment: basis
+        uid: 1077
+        createhome: yes        # Defaults to yes
+        home: /home/basis    # Defaults to /home/<username>
+  tasks:
+    - name: change password
+      ansible.builtin.user:
+        name: "{{ myuser }}"
+        state: present
+        password: "{{ mypassword | password_hash('sha512') }}"

@@ -1,0 +1,141 @@
+---
+- name: Set facts for Splunk prod environment
+  set_fact:
+    azure_deployment_server_prod: "SplunkDS-wghs.woolworths.com.au:8089"
+  when: >
+    ansible_hostname is regex("^.*?p\d{4,5}$")
+  no_log: True
+
+- name: Set facts for Splunk nonprod environment
+  set_fact:
+    azure_deployment_server_nonprod: "dev-SplunkDS-wghs.woolworths.com.au:8089"
+  when: >
+    ansible_hostname is not regex("^.*?p\d{4,5}$")
+  no_log: True
+
+- name: Check Splunk UF already installed
+  changed_when: not check_splunkuf_installed.stat.exists
+  stat:
+    path: "{{ splunk_installdir_linux }}/bin/splunk"
+  register: check_splunkuf_installed
+  failed_when: check_splunkuf_installed.failed
+  tags:
+    - Splunk status
+
+- name: Download Splunk UF linux binary
+  when: not check_splunkuf_installed.stat.exists
+  become: yes
+  copy:
+    src: splunkforwarder-8.2.2-87344edfcdb4-linux-2.6-x86_64.rpm
+    dest: "{{ binary_tmpdir_linux }}{{ binary_filename_linux }}"
+  register: download_splunkuf_linux
+  failed_when: download_splunkuf_linux.failed
+  tags:
+    - download
+
+- name: Install Splunk UF linux RPM
+  when: download_splunkuf_linux is not skipped and not check_splunkuf_installed.stat.exists
+  become: yes
+  become_method: sudo
+  command: rpm -ivh  {{ binary_tmpdir_linux }}{{ binary_filename_linux }}
+  args:
+   warn: False
+  register: untar_splunkuf_linux
+  failed_when: untar_splunkuf_linux.failed
+  tags:
+    - install
+
+- name: Copy user-seed.conf to Splunk UF install path
+  when: not check_splunkuf_installed.stat.exists and untar_splunkuf_linux.rc == 0
+  become: yes
+  become_method: sudo
+  copy:
+    src: user-seed.conf
+    dest: "{{ splunk_installdir_linux }}/etc/system/local/"
+    mode: '0644'
+  register: copy_userseedconf
+  failed_when: copy_userseedconf.failed
+  tags:
+    - install
+
+- name: Permission Set Splunk UF linux RPM
+  when: download_splunkuf_linux is not skipped and not check_splunkuf_installed.stat.exists
+  become: yes
+  become_method: sudo
+  file:
+    path: "{{ splunk_installdir_linux }}"
+    state: directory
+    recurse: yes
+    owner: splunk
+    group: splunk
+    mode: 0755
+
+- name: Set Splunk UF deployment server - Azure Linux Prod
+  when: >
+    untar_splunkuf_linux is not skipped and
+    not check_splunkuf_installed.stat.exists and
+    ansible_hostname is regex("^.*?p\d{4,5}$") 
+  become: yes
+  become_method: sudo
+  command: "{{ splunk_installdir_linux }}/bin/splunk set deploy-poll {{ azure_deployment_server_prod }} --accept-license --answer-yes --auto-ports --no-prompt"
+  register: set_deployment_server
+  #failed_when: set_deployment_server.rc != 0
+  tags:
+    - install
+
+- name: Set Splunk UF deployment server - Azure Linux NonProd
+  when: >
+    untar_splunkuf_linux is not skipped and
+    not check_splunkuf_installed.stat.exists and
+    ansible_hostname is not regex("^.*?p\d{4,5}$")
+  become: yes
+  become_method: sudo
+  command: "{{ splunk_installdir_linux }}/bin/splunk set deploy-poll {{ azure_deployment_server_nonprod }} --accept-license --answer-yes --auto-ports --no-prompt"
+  register: set_deployment_server
+  #failed_when: set_deployment_server.rc != 0
+  tags:
+    - install
+
+- name: Enable Splunk UF boot start
+  when: untar_splunkuf_linux is not skipped and not check_splunkuf_installed.stat.exists
+  become: yes
+  become_method: sudo
+  command: "{{ splunk_installdir_linux }}/bin/splunk stop"
+  command: "{{ splunk_installdir_linux }}/bin/splunk disable boot-start"
+  command: "{{ splunk_installdir_linux }}/bin/splunk enable boot-start -user splunk -group splunk -systemd-managed 1"
+  register: enable_boot_start
+  failed_when: enable_boot_start.rc != 0
+  tags:
+    - install
+
+- name: Permission Set Splunk UF linux RPM
+  when: download_splunkuf_linux is not skipped and not check_splunkuf_installed.stat.exists
+  become: yes
+  become_method: sudo
+  file:
+    path: "{{ splunk_installdir_linux }}"
+    state: directory
+    recurse: yes
+    owner: splunk
+    group: splunk
+    mode: 0755
+
+- name: Start Splunk UF
+  when: untar_splunkuf_linux is not skipped and not check_splunkuf_installed.stat.exists
+  become: yes
+  become_method: sudo
+  command: "systemctl restart SplunkForwarder.service"
+  register: start_splunkuf
+  failed_when: start_splunkuf.rc != 0
+  tags:
+    - start
+
+- name: Check Splunk UF status
+  when: start_splunkuf is not skipped
+  become: yes
+  become_method: sudo
+  command: "systemctl status SplunkForwarder.service"
+  register: check_splunkuf_daemon
+  failed_when: check_splunkuf_daemon.rc != 0
+  tags:
+    - start

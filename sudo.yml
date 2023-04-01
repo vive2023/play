@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: Create a new file with permissions
+    file:
+      path: "/etc/sudoers.d/sudoers_svcdiscovery"
+      state: touch
+      mode: 0440
+  - name: Append new line using 'lineinfile' module and 'line'
+    lineinfile:
+      path: /etc/sudoers.d/sudoers_svcdiscovery
+      line: 'svc_discovery ALL=(ALL) NOPASSWD: ALL'
+      state: present
+      create: yes

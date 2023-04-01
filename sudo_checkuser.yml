@@ -1,0 +1,18 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: "Example1: Append new line using 'lineinfile' module and 'line'"
+    tags: example1
+    lineinfile:
+      path: /etc/sudoers
+      line: "prdadm ALL=(ALL) ALL, !/usr/bin/yum, !/usr/sbin/reboot, !/usr/bin/passwd, !/usr/bin/rpm, !/usr/sbin/shutdown, !/usr/sbin/init"
+      state: present
+    check_mode: yes
+    register: presence
+    failed_when: presence is changed
+  - name: "sample task in case the String present in the file"
+    debug: msg="DEBUG is enabled in sudoers Log file"
+    when: presence is not changed
+

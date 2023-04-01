@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: no
+  become: yes
+  tasks:  
+  - name: Ansible shell module multiple commands  
+    shell: "hostname -f"  
+    register: ps
+  - debug: var=ps.stdout_lines

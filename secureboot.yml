@@ -1,0 +1,13 @@
+---
+- name: to check secureboot status 
+  hosts: all
+  gather_facts: yes
+  become: false 
+  tasks:
+  -  name: secureboot status
+     shell:
+       cmd: mokutil --sb-state
+     register: securebootinfo
+  -  debug: 
+       msg: "{{ securebootinfo.stdout_lines }}"
+

@@ -1,0 +1,20 @@
+---
+- name: service module demo
+  hosts: all
+  become: true
+  vars:
+    disable_services:
+      - "insights-client.service"
+      - "insights-client.timer"
+  tasks:
+   - name: restart insight service
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: yes
+     with_items: '{{ disable_services }}'
+   - name: register insights
+     shell:  |
+       insights-client --unregister;
+       sleep 5;
+       insights-client --register;

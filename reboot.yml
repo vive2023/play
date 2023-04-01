@@ -1,0 +1,8 @@
+---
+- name: Linux Reboot 
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Reboot the machine (Wait for 180 min)
+      reboot:
+        reboot_timeout: 180

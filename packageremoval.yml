@@ -1,0 +1,9 @@
+- hosts: all
+  gather_facts: false
+  
+  tasks:
+  - name: remove nimsoft packages
+    shell: rpm -e --nodeps {{ item }}
+    with_lines:
+    - "yum list installed |grep nimsoft-* |cut -d  ' ' -f1"
+    - "yum list installed |grep uimagent-* |cut -d  ' ' -f1"

@@ -1,0 +1,10 @@
+---
+- name: Check uptime prior reboot
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: just display
+      shell: uptime
+      register: hostname
+    - debug:
+        var: hostname.stdout_lines

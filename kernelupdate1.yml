@@ -1,0 +1,13 @@
+---
+
+- hosts: all 
+  gather_facts: false 
+  tasks:
+  - name: Here we are using YUM module with list to check nginx packages 
+    yum:
+      list: kernel
+    register: var_output
+  - debug: 
+       var: var_output
+       msg: "{{ item.version }}-{{ item.release }}"
+    loop: "{{ var_output.results | selectattr('yumstate', 'equalto', 'available') | list }}"

@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  tasks:
+  - name: Create a new file with permissions
+    file:
+      path: "/etc/sudoers.d/sudoers_svcdiscovery"
+      state: touch
+      mode: 0440

@@ -1,0 +1,11 @@
+- hosts: all
+  tasks:
+  - name: "Read a file content"
+    shell: |
+           cat /etc/resolv.conf
+           sleep 5
+           lsattr /etc/resolv.conf 
+    register: file_content
+  - name: "Print the file content to a console"
+    debug:
+      msg: "{{ file_content.stdout }}"

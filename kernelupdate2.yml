@@ -1,0 +1,13 @@
+---
+
+- hosts: all 
+  gather_facts: true
+  tasks:
+  - name: Here we are using YUM module with list to check updated packages 
+    yum:
+      list: updates
+      update_cache: true
+    register: var_output
+    when: ansible_distribution == 'RedHat enterprise Linux' 
+  - debug: 
+       msg: "{{ var_output.results | map(attribute='name') | list }}"

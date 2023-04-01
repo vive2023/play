@@ -1,0 +1,10 @@
+---
+- name: lscpu output
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: just display
+      shell: lscpu
+      register: hostname
+    - debug:
+        var: hostname.stdout_lines

@@ -1,0 +1,25 @@
+---
+- name: service status
+  hosts: all
+  gather_facts: no
+  become: yes
+  tasks:
+   - name: collect facts about system services
+     service_facts:
+   - name: Debug
+     debug:
+        var: ansible_facts.services["SplunkForwarder.service"]
+   - name: Debug
+     debug:
+        var: ansible_facts.services["falcon-sensor.service"]
+   - name: Gather Installed Packages Facts
+     package_facts:
+       manager: "auto"
+     tags:
+        - falcon-sensor
+   - name: "falconsensor test result"
+     debug: 
+        var: ansible_facts.packages['falcon-sensor']
+     when: "'falcon-sensor' in ansible_facts.packages"
+     tags:
+        - falcon-sensor
