@@ -1,6 +1,6 @@
 - hosts: all
   tasks:
-  - name: "Read a file content"
+  - name: "setting attribute for a file"
     shell: |
            chattr +i /etc/resolv.conf
     register: file_content
